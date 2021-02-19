@@ -1,0 +1,264 @@
+body {
+    margin:0;
+    background-color: #faafda; 
+}
+
+h1 {
+    font-family: 'Audiowide', sans-serif;
+    margin: 15px 0 0 5px;
+    font-size: 22px;
+    color:#141414;
+    text-shadow: 0px -2px 5px #ffffff;
+    font-weight: 600;
+}
+h3 {
+    margin: 0;
+}
+
+h4 {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 200;
+    font-size: 10pt;
+    line-height: 12pt;
+    color: #ffffff;
+    position: absolute;
+    top: 470px;
+    left: 0px;
+}
+
+.displayUpper {
+    margin-top: 4px;
+    margin-right: 12px;
+    height: 14pt;
+    position: relative;
+    font-family: 'Inconsolata', monospace;
+    color:#383838;
+    text-shadow:0px 1px 1px #3a3a3a;
+}
+
+.displayMain {
+    font-family: 'Big Shoulders Stencil Text', sans-serif;
+    margin-right: 12px;
+    font-size: 40px;
+    position: relative;
+    bottom: 3px;
+    color:#383838;
+    text-shadow:0px 1px 2px #3a3a3a;
+}
+
+.containerDepth {
+    width: 300px;
+    height: 475px;
+    margin: 5vh auto auto auto;
+    background-color: #404040;
+    border-color:#383838;
+    border-style: solid;
+    border-radius: 30px;
+    border-width: 3px;
+    position: relative;
+    box-shadow: inset 0px -2px 3px #a3a3a3;
+
+}
+.container {
+    background-color: #babec7;
+    width: 255px;
+    height: 440px;
+    position: relative;
+    top: -3px;
+    left: -3px;
+    padding: 10px;
+    border-color:#383838;
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 3px;
+    box-shadow: inset 0px -5px 3px #ebebeb;
+    
+
+}
+
+.displayBorder {
+    background-color: #85919b;
+    box-shadow: 0px -2px 5px 0px rgba(255, 255, 255, 0.75);
+    /** Requires .container to have position: relative; to work**/
+    position: relative; 
+    height: 90px;
+    margin-top: 20px;
+    border-style: solid;
+    border-color: #646464;
+    border-width: 1px;
+    border-radius: 5px;
+    
+}
+
+.display {
+    background-color: #97d528;
+    width: 90%;
+    height: 68px;
+    /** Requires .container to have position: relative; to work**/
+    position: absolute; 
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-style: solid;
+    border-color: #383838;
+    border-width: 2px;
+    border-radius: 5px;
+    box-shadow: 0px -2px 5px 0px rgba(255, 255, 255, 0.75);
+    box-shadow: inset 1px 1px 5px #383838;
+    text-align: right;
+}
+
+.buttonContainer {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 600;
+    text-align: center;
+    font-size: 20px;
+    position: absolute;
+    top: 190px;
+    width: 92%;
+    height: 250px;
+    display: grid;
+    column-gap: 10px;
+    row-gap: 5px;
+    justify-items: center;
+    grid-template-columns: 22% 22% 22% 22%;
+    grid-template-areas:
+        "cl pe di mu"
+        "n7 n8 n9 mi"
+        "n4 n5 n6 ad"
+        "n1 n2 n3 eq"
+        "n0 n0 de eq";
+}
+
+.button {
+    width: 45px;
+    height: 34px;
+    cursor:pointer;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #727272;
+    background-color: #85919b;
+    border-radius: 5px 5px 10px 10px;
+    text-shadow:0px -1px 3px #fafafa;
+    box-shadow: inset 0px -2px 3px #a3a3a3;
+}
+.button:hover {
+	background-color:#757f88;
+}
+.button:active {
+	position:relative;
+	top:1px;
+}
+
+.tall {
+    width: 45px;
+    height: 58px;
+    padding-top: 30px;
+    grid-area: eq;
+}
+.buttonTall:active {
+	position:relative;
+	top:1px;
+}
+
+.short {
+    width: 108px;
+    height: 34px;
+    grid-area: n0;
+}
+.buttonShort:hover {
+	background-color:#757f88;
+}
+.buttonShort:active {
+	position:relative;
+	top:1px;
+}
+
+.dark {
+    border-color: #4e4e4e;
+    background-color: #5d6272;
+    font-size: 110%;
+    
+}
+.dark:hover {
+	background-color:#484d5c;
+}
+
+
+.pink {
+    border-color: #8f1e66;
+    background-color: #d72d9a;
+}
+.pink:hover {
+    background-color: #c02888;
+}
+
+
+.blue {
+    border-color: #147f83;
+    background-color: #1ebabe;
+    font-size: 80%;
+    padding-top: 4px;
+    height: 30px;
+    text-shadow:0px -1px 3px #fafafa;
+}
+.blue:hover {
+    background-color: #1ba7ac;
+}
+
+
+.butcl {
+    grid-area: cl;
+}
+.butpe {
+    grid-area: pe;
+}
+.butdi {
+    grid-area: di;
+}
+.butmu {
+    grid-area: mu;
+}
+
+.butn7 {
+    grid-area: n7;
+}
+.butn8 {
+    grid-area: n8;
+}
+.butn9 {
+    grid-area: n9;
+}
+.butmi {
+    grid-area: mi;
+}
+
+.butn4 {
+    grid-area: n4;
+}
+.butn5 {
+    grid-area: n5;
+}
+.butn6 {
+    grid-area: n6;
+}
+.butad {
+    grid-area: ad;
+}
+
+.butn1 {
+    grid-area: n1;
+}
+.butn2 {
+    grid-area: n2;
+}
+.butn3 {
+    grid-area: n3;
+}
+.butde {
+    grid-area: de;
+}
+
+
+
+
