@@ -4,32 +4,14 @@ var displayMain = document.querySelector(".displayMain");
 
 const buttons = document.querySelectorAll(".button");
 
+var arrayMain = [0];
+var valueA = 0;
+var operation = false;
+var blank = false;
 
-// buttons.forEach(function (button) {
-//     button.addEventListener("hover", console.log(button));
-// })
-
-// const n1 = buttons[12];
-// const n2 = buttons[13];
-// const n3 = buttons[14];
-// const n4 = buttons[8];
-// const n5 = buttons[9];
-// const n6 = buttons[10];
-// const n7 = buttons[4];
-// const n8 = buttons[5];
-// const n9 = buttons[6];
-// const n0 = buttons[16];
-
-// const clear = buttons[0];
-// const del = buttons[1];
-// const divide = buttons[2];
-// const multiply = buttons[3];
-// const minus = buttons[7];
-// const plus = buttons[11];
-// const equals = buttons[15];
-// const decimal = buttons[17];
-
-var arrayA = [0];
+var pendingSign = false;
+var a;
+var b;
 
 function updateDisplay(arrayA) {
     displayMain.textContent = arrayA.join("");
@@ -37,24 +19,53 @@ function updateDisplay(arrayA) {
 
 buttons.forEach(function (button) {
     button.addEventListener("click", function () {
-        if (!isNaN(button.textContent) && arrayA.length < 13) {
-            if (arrayA[0] == 0) {
-                arrayA = []
+        if (!isNaN(button.textContent) && arrayMain.length < 13) {
+            if (arrayMain[0] == 0) {
+                arrayMain = []
             }
-            arrayA.push(button.textContent);
-            console.log(arrayA);
+            if (operation != false && blank == false) {
+                blank = true;
+                arrayMain = []
+            }
+            
+            arrayMain.push(button.textContent);
         }
         switch (true) {
             case button.textContent == "C":
-                arrayA = [0];
+                arrayMain = [0];
+                valueA = 0;
+                operation = false;
+                blank = false;
                 break;
             case button.textContent == "Del":
-                arrayA.pop();
+                arrayMain.pop();
+                if (arrayMain.length == 0) {
+                    arrayMain = [0];
+                }
+                break;
+            case button.textContent == "+":
+
+                a = parseInt(arrayMain.join(""));
+                console.log(a);
+                pendingSign = "plus";
+                console.log("pendingSign:", pendingSign);
+                operate("plus", a, b);
+                break;
+            case button.textContent == "=":
+                console.log("equals");
                 break;
         }
-        updateDisplay(arrayA);
+        // console.log("arrayMain:", arrayMain);
+        // console.log("valueA:", valueA);
+        // console.log("blank:", blank);
+        updateDisplay(arrayMain);
     })
 });
+
+
+function operate (sign, a, b) {
+
+}
 
 
 function addFunc (a, b) {
