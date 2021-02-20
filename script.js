@@ -5,13 +5,25 @@ var displayMain = document.querySelector(".displayMain");
 const buttons = document.querySelectorAll(".button");
 
 var arrayMain = [0];
-var valueA = 0;
-var operation = false;
-var blank = false;
 
 var pendingSign = false;
-var a;
-var b;
+var a = 0;
+var bank = false;
+var clearScreen = false;
+
+// If pending sign is not false, 
+function operate (number, sign) {
+    if (pendingSign == false) {
+        bank = number;
+        pendingSign = sign;
+      // else if pending sign is TRUE...  
+    } else { 
+        switch(true) {
+            case sign == "plus":
+                return bank + number;
+        }
+    }
+}
 
 function updateDisplay(arrayA) {
     displayMain.textContent = arrayA.join("");
@@ -23,19 +35,20 @@ buttons.forEach(function (button) {
             if (arrayMain[0] == 0) {
                 arrayMain = []
             }
-            if (operation != false && blank == false) {
-                blank = true;
+            if (pendingSign != false && clearScreen == true) {
+                clearScreen = false;
                 arrayMain = []
             }
-            
+
             arrayMain.push(button.textContent);
         }
         switch (true) {
             case button.textContent == "C":
                 arrayMain = [0];
-                valueA = 0;
-                operation = false;
-                blank = false;
+                pendingSign = false;
+                a = 0;
+                bank = false;
+                clearScreen = true;
                 break;
             case button.textContent == "Del":
                 arrayMain.pop();
@@ -45,12 +58,24 @@ buttons.forEach(function (button) {
                 break;
             case button.textContent == "+":
 
+
+                
+                // Send sign and number in arrayMain to operate.
                 a = parseInt(arrayMain.join(""));
-                console.log(a);
-                pendingSign = "plus";
-                console.log("pendingSign:", pendingSign);
-                operate("plus", a, b);
+                
+                console.log(a, "plus");
+                clearScreen = true;
+                
+                if (bank != false) {
+                
+                    arrayMain = Array.from(operate(a, "plus").toString());
+                } else if (bank == false) {
+                    operate(a, "plus");
+                }
+                
+
                 break;
+
             case button.textContent == "=":
                 console.log("equals");
                 break;
@@ -63,9 +88,7 @@ buttons.forEach(function (button) {
 });
 
 
-function operate (sign, a, b) {
 
-}
 
 
 function addFunc (a, b) {
