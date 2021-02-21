@@ -35,15 +35,11 @@ function operate (number, sign) {
                 return result;
 
             case sign == "equals":
-                console.log(`EQ bnk: ${bank} nbr: ${number} sgn: ${pendingSign}`);
                 last = number;
-                console.log("last:", last);
                 result = equals(bank, number, pendingSign);
                 return equals(bank, number, pendingSign);
 
             case sign == "repeatEq":
-                console.log("repeatFunction");
-                console.log(`repeatEQ result: ${result} last: ${last} sgn: ${pendingSign}`);
                 rptResult = equals(result, last, pendingSign);
                 result = rptResult;
                 return rptResult;
@@ -93,10 +89,17 @@ buttons.forEach(function (button) {
                 }
                 // Convert arrayMain/ display to number.
                 a = parseFloat(arrayMain.join(""));
+
+                if (pressHistory[1] == "=") {
+                    bank = a;
+                    clearScreen = true;
+                    break;
+                }
                 
-                // Send sign and number in arrayMain to operate.
+                // If bank is NOT empty.. Send sign and number in arrayMain to operate.
                 if (bank != false) {
                     arrayMain = Array.from(operate(a, "plus").toString());
+                // If bank IS empty, send number and sign. Don't update array.
                 } else if (bank == false) {
                     operate(a, "plus");
                 }
@@ -107,9 +110,12 @@ buttons.forEach(function (button) {
                 break;
                 
             case button.textContent == "=":
+                
+                if (!(bank != false)) {
+                    break;
+                }
                 // Was this button pressed already? If yes, repeat operation.
                 if (pressHistory[0] == pressHistory[1]) {
-                    
                     
                     arrayMain = Array.from(operate(0, "repeatEq").toString());
                     //console.log(operate(0, "repeatEq"));
@@ -121,11 +127,9 @@ buttons.forEach(function (button) {
                 a = parseFloat(arrayMain.join(""));
 
                 // Send sign and number in arrayMain to operate.
-                if (bank != false) {
-                    //operate(a, "equals");
-                    
+                
                     arrayMain = Array.from(operate(a, "equals").toString());
-                }
+                
 
                 break;
         }
