@@ -19,11 +19,13 @@ var result = 0;
 
 // If pending sign is not false, 
 function operate (number, sign) {
-    
+    console.log("pendingSign:", pendingSign);
+    console.log("sign:", sign);
 
     if ((pendingSign != sign && sign != "equals" && sign != "repeatEq")) {
         bank = number;
         pendingSign = sign;
+        //console.log("pendingSign:", pendingSign);
 
         
       // else if pending sign is TRUE...  
@@ -31,6 +33,11 @@ function operate (number, sign) {
         switch(true) {
             case sign == "plus":
                 result = bank + number;
+                bank = result;
+                return result;
+
+            case sign == "minus":
+                result = bank - number;
                 bank = result;
                 return result;
 
@@ -81,8 +88,9 @@ buttons.forEach(function (button) {
                     arrayMain = [0];
                 }
                 break;
-            case button.textContent == "+":
 
+            case button.textContent == "+":
+                pendingSign = "plus";
                 // Was this button pressed already? If yes, pass.
                 if (pressHistory[0] == pressHistory[1]) {
                     break;
@@ -102,6 +110,34 @@ buttons.forEach(function (button) {
                 // If bank IS empty, send number and sign. Don't update array.
                 } else if (bank == false) {
                     operate(a, "plus");
+                }
+
+                // To ensure screen is cleared when next numbers are entered.
+                clearScreen = true;
+
+                break;
+
+            case button.textContent == "-":
+                pendingSign = "minus";
+                // Was this button pressed already? If yes, pass.
+                if (pressHistory[0] == pressHistory[1]) {
+                    break;
+                }
+                // Convert arrayMain/ display to number.
+                a = parseFloat(arrayMain.join(""));
+
+                if (pressHistory[1] == "=") {
+                    bank = a;
+                    clearScreen = true;
+                    break;
+                }
+                
+                // If bank is NOT empty.. Send sign and number in arrayMain to operate.
+                if (bank != false) {
+                    arrayMain = Array.from(operate(a, "minus").toString());
+                // If bank IS empty, send number and sign. Don't update array.
+                } else if (bank == false) {
+                    operate(a, "minus");
                 }
 
                 // To ensure screen is cleared when next numbers are entered.
