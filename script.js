@@ -9,13 +9,17 @@ var pressHistory = [];
 var arrayMain = [0];
 
 var pendingSign = false;
-var a = 0;
-var bank = false;
+var secondNumber = 0;
+var firstNumber = false;
 var clearScreen = false;
 
 // variable to last number for double equals.
 var last = false;
 var result = 0;
+
+// Variable for if decimal is in use.
+var isDecimal = false;
+
 
 // If pending sign is not false, 
 function operate (number, sign) {
@@ -23,7 +27,7 @@ function operate (number, sign) {
     console.log("sign:", sign);
 
     if ((pendingSign != sign && sign != "equals" && sign != "repeatEq")) {
-        bank = number;
+        firstNumber = number;
         pendingSign = sign;
         //console.log("pendingSign:", pendingSign);
 
@@ -32,19 +36,19 @@ function operate (number, sign) {
     } else { 
         switch(true) {
             case sign == "plus":
-                result = bank + number;
-                bank = result;
+                result = firstNumber + number;
+                firstNumber = result;
                 return result;
 
             case sign == "minus":
-                result = bank - number;
-                bank = result;
+                result = firstNumber - number;
+                firstNumber = result;
                 return result;
 
             case sign == "equals":
                 last = number;
-                result = equals(bank, number, pendingSign);
-                return equals(bank, number, pendingSign);
+                result = equals(firstNumber, number, pendingSign);
+                return equals(firstNumber, number, pendingSign);
 
             case sign == "repeatEq":
                 rptResult = equals(result, last, pendingSign);
@@ -63,6 +67,16 @@ buttons.forEach(function (button) {
         // record last thing that was pressed
         pressHistory.unshift(button.textContent);
 
+        // Set decimal switch.
+        if (arrayMain.includes(".")) {
+            isDecimal = true;
+            console.log("decimal");
+        } else {
+            isDecimal = false;
+            console.log("wholeNum");
+        }
+    
+
         if (!isNaN(button.textContent) && arrayMain.length < 13) {
             if (arrayMain[0] == 0) {
                 arrayMain = []
@@ -78,14 +92,23 @@ buttons.forEach(function (button) {
             case button.textContent == "C":
                 arrayMain = [0];
                 pendingSign = false;
-                a = 0;
-                bank = false;
+                secondNumber = 0;
+                firstNumber = false;
                 clearScreen = true;
+                isDecimal = false;
                 break;
             case button.textContent == "Del":
                 arrayMain.pop();
                 if (arrayMain.length == 0) {
                     arrayMain = [0];
+                }
+                break;
+
+            case button.textContent == ".":
+                console.log("decimal");
+                if(isDecimal == false) {
+                    isDecimal = true;
+                    arrayMain.push(button.textContent);
                 }
                 break;
 
@@ -96,20 +119,20 @@ buttons.forEach(function (button) {
                     break;
                 }
                 // Convert arrayMain/ display to number.
-                a = parseFloat(arrayMain.join(""));
+                secondNumber = parseFloat(arrayMain.join(""));
 
                 if (pressHistory[1] == "=") {
-                    bank = a;
+                    firstNumber = secondNumber;
                     clearScreen = true;
                     break;
                 }
                 
-                // If bank is NOT empty.. Send sign and number in arrayMain to operate.
-                if (bank != false) {
-                    arrayMain = Array.from(operate(a, "plus").toString());
-                // If bank IS empty, send number and sign. Don't update array.
-                } else if (bank == false) {
-                    operate(a, "plus");
+                // If firstNumber is NOT empty.. Send sign and number in arrayMain to operate.
+                if (firstNumber != false) {
+                    arrayMain = Array.from(operate(secondNumber, "plus").toString());
+                // If firstNumber IS empty, send number and sign. Don't update array.
+                } else if (firstNumber == false) {
+                    operate(secondNumber, "plus");
                 }
 
                 // To ensure screen is cleared when next numbers are entered.
@@ -124,20 +147,20 @@ buttons.forEach(function (button) {
                     break;
                 }
                 // Convert arrayMain/ display to number.
-                a = parseFloat(arrayMain.join(""));
+                secondNumber = parseFloat(arrayMain.join(""));
 
                 if (pressHistory[1] == "=") {
-                    bank = a;
+                    firstNumber = secondNumber;
                     clearScreen = true;
                     break;
                 }
                 
-                // If bank is NOT empty.. Send sign and number in arrayMain to operate.
-                if (bank != false) {
-                    arrayMain = Array.from(operate(a, "minus").toString());
-                // If bank IS empty, send number and sign. Don't update array.
-                } else if (bank == false) {
-                    operate(a, "minus");
+                // If firstNumber is NOT empty.. Send sign and number in arrayMain to operate.
+                if (firstNumber != false) {
+                    arrayMain = Array.from(operate(secondNumber, "minus").toString());
+                // If firstNumber IS empty, send number and sign. Don't update array.
+                } else if (firstNumber == false) {
+                    operate(secondNumber, "minus");
                 }
 
                 // To ensure screen is cleared when next numbers are entered.
@@ -147,7 +170,7 @@ buttons.forEach(function (button) {
                 
             case button.textContent == "=":
                 
-                if (!(bank != false)) {
+                if (!(firstNumber != false)) {
                     break;
                 }
                 // Was this button pressed already? If yes, repeat operation.
@@ -160,32 +183,29 @@ buttons.forEach(function (button) {
                 }
 
                 // Convert arrayMain/ display to number.
-                a = parseFloat(arrayMain.join(""));
+                secondNumber = parseFloat(arrayMain.join(""));
 
                 // Send sign and number in arrayMain to operate.
                 
-                    arrayMain = Array.from(operate(a, "equals").toString());
+                    arrayMain = Array.from(operate(secondNumber, "equals").toString());
                 
 
                 break;
         }
-        // console.log("arrayMain:", arrayMain);
-        // console.log("valueA:", valueA);
-        // console.log("blank:", blank);
         updateDisplay(arrayMain);
     })
 });
 
-function equals(bank, number, pendingSign) {
+function equals(firstNumber, secondNumber, pendingSign) {
     switch (true) {
         case pendingSign == "plus":
-            return bank + number;
+            return firstNumber + secondNumber;
         case pendingSign == "minus":
-            return bank - number;
+            return firstNumber - secondNumber;
         case pendingSign == "multiply":
-            return bank * number;
+            return firstNumber * secondNumber;
         case pendingSign == "divide":
-            return bank / number;            
+            return firstNumber / secondNumber;            
     }
 }
 
