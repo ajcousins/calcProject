@@ -38,7 +38,8 @@ h4 {
 
 .displayMain {
     font-family: 'Big Shoulders Stencil Text', sans-serif;
-    margin-right: 12px;
+    margin: 14px 12px;
+    
     font-size: 40px;
     position: relative;
     bottom: 3px;
