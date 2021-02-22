@@ -7,24 +7,56 @@ var secondNumber = "";
 var pendingSign = false;
 var isDecimal = false;
 var firstNumIsCurrent = true;
+var error = false;
 
 var result;
 var memSecondNum = "";
 
 function updateDisplay(displayValue) {
-    // while (displayValue.substring(0,1) == "0") {
-    //     displayValue = displayValue.substring(1);
-    //     console.log(displayValue);
-    // }
-    // if (displayValue.length == 1 && displayValue == "") {
-    //     displayValue = "0";
-    // }
-    displayMain.textContent = displayValue;
+
+    var displayString;
+
+    // If decimal was last pressed.. and there isn't already a decimal present..
+    if (pressHistory[0] == "." && displayValue % 1 == 0) {
+        displayString = displayValue.toString()
+    } else {
+        displayValue = Math.round(displayValue * 100) / 100;
+        displayString = displayValue.toString();
+    }
+
+    
+    //let displayString = Number.parseFloat(displayValue).toPrecision(13);
+    if (displayString.length > 13) {
+        displayString = "Too long..."
+        error = true;
+    }
+
+    if (displayString == "NaN") {
+        displayString = "Nope";
+        error = true;
+    }
+
+    if (displayString == "Infinity") {
+        displayString = "¬_¬";
+        error = true;
+    }
+
+    if (displayString.includes(".")) {
+        isDecimal = true;
+        console.log("decimal present")
+    }
+
+    displayMain.textContent = displayString;
 }
 
 // Handles inputs
 buttons.forEach(function (button) {
     button.addEventListener("click", function () {
+
+        if (error == true) {
+            error = false;
+            clearEverything();
+        }
 
         // Record last thing that was pressed. Can be used for upper display.
         if (button.textContent != "C") {
@@ -32,8 +64,15 @@ buttons.forEach(function (button) {
         }
         
         switch (true) {
+
             // Numbers
             case !(isNaN(button.textContent)):
+                
+                if (displayMain.textContent.length > 12) {
+                    console.log("long");
+                    break;
+                }
+
                 // If firstNumber is current, add numbers to firstNumber
                 if (firstNumIsCurrent) {
                     firstNumber += button.textContent;
@@ -42,32 +81,44 @@ buttons.forEach(function (button) {
                     secondNumber += button.textContent;
                     updateDisplay(secondNumber)
                 }
-                console.log("First:", firstNumber);
-                console.log("Second:", secondNumber);
+                
                 break;
         
             case button.textContent == ".":
-                console.log("decimal");
+                console.log("decimal button");
+                if (displayMain.textContent.length > 12) {
+                    console.log("long");
+                    break;
+                }
                 // Needs to check if decimal is present in display to work.
-                // if(!isDecimal) {
-                //     isDecimal = true;
-                    if (firstNumIsCurrent) {
-                        firstNumber += ".";
-                    } else {
-                        secondNumber += ".";
+                if(isDecimal) {
+                    break;
+                }
+                
+                if (firstNumIsCurrent) {
+                    if (firstNumber == "") {
+                        firstNumber += "0";
                     }
+
+                    console.log("a");
+                    firstNumber += ".";
+                    updateDisplay(firstNumber)
+                } else {
+                    if (secondNumber == "") {
+                        secondNumber += "0";
+                    }
+                    secondNumber += ".";
+                    updateDisplay(secondNumber)
+                }
+
+                console.log("First:", firstNumber);
+                console.log("Second:", secondNumber);
+
                 break;
         
         
             case button.textContent == "C":
-                console.log("Clear");
-                updateDisplay("0");
-                pressHistory = [];
-                firstNumber = "";
-                secondNumber = "";
-                pendingSign = false;
-                isDecimal = false;
-                firstNumIsCurrent = true;
+                clearEverything();
                 break;
 
             case button.textContent == "Del":
@@ -121,6 +172,7 @@ buttons.forEach(function (button) {
                 console.log(operator);
                 firstNumIsCurrent = false;
                 pendingSign = operator;
+                isDecimal = false;
                 break;
 
             
@@ -173,8 +225,13 @@ buttons.forEach(function (button) {
                 }
 
                 break;
+
+            case true:
+                console.log("First:", firstNumber);
+                console.log("Second:", secondNumber);
+
         }
-        //updateDisplay(arrayMain);
+        
     })
 });
 
@@ -196,4 +253,15 @@ function operate(firstNumber, secondNumber, pendingSign) {
     }
     updateDisplay(result);
     return result;
+}
+
+function clearEverything () {
+    console.log("Clear");
+    updateDisplay("0");
+    pressHistory = [];
+    firstNumber = "";
+    secondNumber = "";
+    pendingSign = false;
+    isDecimal = false;
+    firstNumIsCurrent = true;
 }
