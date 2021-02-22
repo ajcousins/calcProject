@@ -1,211 +1,138 @@
 var displayMain = document.querySelector(".displayMain");
-
-
-
 const buttons = document.querySelectorAll(".button");
 
 var pressHistory = [];
-
-var arrayMain = [0];
-
+var firstNumber = "";
+var secondNumber = "";
 var pendingSign = false;
-var secondNumber = 0;
-var firstNumber = false;
-var clearScreen = false;
-
-// variable to last number for double equals.
-var last = false;
-var result = 0;
-
-// Variable for if decimal is in use.
 var isDecimal = false;
+var firstNumIsCurrent = true;
 
-
-// If pending sign is not false, 
-function operate (number, sign) {
-    console.log("pendingSign:", pendingSign);
-    console.log("sign:", sign);
-
-    if ((pendingSign != sign && sign != "equals" && sign != "repeatEq")) {
-        firstNumber = number;
-        pendingSign = sign;
-        //console.log("pendingSign:", pendingSign);
-
-        
-      // else if pending sign is TRUE...  
-    } else { 
-        switch(true) {
-            case sign == "plus":
-                result = firstNumber + number;
-                firstNumber = result;
-                return result;
-
-            case sign == "minus":
-                result = firstNumber - number;
-                firstNumber = result;
-                return result;
-
-            case sign == "equals":
-                last = number;
-                result = equals(firstNumber, number, pendingSign);
-                return equals(firstNumber, number, pendingSign);
-
-            case sign == "repeatEq":
-                rptResult = equals(result, last, pendingSign);
-                result = rptResult;
-                return rptResult;
-        }
-    }
-}
+var result;
+var memSecondNum = "";
 
 function updateDisplay(arrayA) {
     displayMain.textContent = arrayA.join("");
 }
 
+// Handles inputs
 buttons.forEach(function (button) {
     button.addEventListener("click", function () {
-        // record last thing that was pressed
-        pressHistory.unshift(button.textContent);
 
-        // Set decimal switch.
-        if (arrayMain.includes(".")) {
-            isDecimal = true;
-            console.log("decimal");
-        } else {
-            isDecimal = false;
-            console.log("wholeNum");
+        // Record last thing that was pressed. Can be used for upper display.
+        if (button.textContent != "C") {
+            pressHistory.unshift(button.textContent);
         }
-    
-
-        if (!isNaN(button.textContent) && arrayMain.length < 13) {
-            if (arrayMain[0] == 0) {
-                arrayMain = []
-            }
-            if (pendingSign != false && clearScreen == true) {
-                clearScreen = false;
-                arrayMain = []
-            }
-
-            arrayMain.push(button.textContent);
-        }
+        
         switch (true) {
-            case button.textContent == "C":
-                arrayMain = [0];
-                pendingSign = false;
-                secondNumber = 0;
-                firstNumber = false;
-                clearScreen = true;
-                isDecimal = false;
+            // Numbers
+            case !(isNaN(button.textContent)):
+                // If firstNumber is current, add numbers to firstNumber
+                if (firstNumIsCurrent) {
+                    firstNumber += button.textContent;
+                } else {
+                    secondNumber += button.textContent;
+                }
+                console.log("First:", firstNumber);
+                console.log("Second:", secondNumber);
                 break;
+        
+            case button.textContent == ".":
+                console.log("decimal");
+                // Needs to check if decimal is present in display to work.
+                // if(!isDecimal) {
+                //     isDecimal = true;
+                    if (firstNumIsCurrent) {
+                        firstNumber += ".";
+                    } else {
+                        secondNumber += ".";
+                    }
+                break;
+        
+        
+            case button.textContent == "C":
+                console.log("Clear");
+                pressHistory = [];
+                firstNumber = "";
+                secondNumber = "";
+                pendingSign = false;
+                isDecimal = false;
+                firstNumIsCurrent = true;
+                break;
+
             case button.textContent == "Del":
+                console.log("Delete");
                 arrayMain.pop();
                 if (arrayMain.length == 0) {
                     arrayMain = [0];
                 }
                 break;
 
-            case button.textContent == ".":
-                console.log("decimal");
-                if(isDecimal == false) {
-                    isDecimal = true;
-                    arrayMain.push(button.textContent);
+            case button.attributes["data-but"].value == "Plus":
+            case button.attributes["data-but"].value == "Minus":
+            case button.attributes["data-but"].value == "Multiply":
+            case button.attributes["data-but"].value == "Divide":
+                var operator = button.attributes["data-but"].value;
+                // If button is the first to be pressed, make first number "0".
+                if (pressHistory.length == 1) {
+                    console.log("sign first");
+                    firstNumber += 0;
                 }
+
+                // If first and second numbers are alrady filled, evaluate numbers.
+                if (secondNumber != "") {
+                    result = operate(firstNumber, secondNumber, pendingSign);
+                    firstNumber = result;
+                    secondNumber = "";
+                }
+                console.log(operator);
+                firstNumIsCurrent = false;
+                pendingSign = operator;
                 break;
 
-            case button.textContent == "+":
-                pendingSign = "plus";
-                // Was this button pressed already? If yes, pass.
-                if (pressHistory[0] == pressHistory[1]) {
-                    break;
-                }
-                // Convert arrayMain/ display to number.
-                secondNumber = parseFloat(arrayMain.join(""));
-
-                if (pressHistory[1] == "=") {
-                    firstNumber = secondNumber;
-                    clearScreen = true;
-                    break;
-                }
-                
-                // If firstNumber is NOT empty.. Send sign and number in arrayMain to operate.
-                if (firstNumber != false) {
-                    arrayMain = Array.from(operate(secondNumber, "plus").toString());
-                // If firstNumber IS empty, send number and sign. Don't update array.
-                } else if (firstNumber == false) {
-                    operate(secondNumber, "plus");
-                }
-
-                // To ensure screen is cleared when next numbers are entered.
-                clearScreen = true;
-
-                break;
-
-            case button.textContent == "-":
-                pendingSign = "minus";
-                // Was this button pressed already? If yes, pass.
-                if (pressHistory[0] == pressHistory[1]) {
-                    break;
-                }
-                // Convert arrayMain/ display to number.
-                secondNumber = parseFloat(arrayMain.join(""));
-
-                if (pressHistory[1] == "=") {
-                    firstNumber = secondNumber;
-                    clearScreen = true;
-                    break;
-                }
-                
-                // If firstNumber is NOT empty.. Send sign and number in arrayMain to operate.
-                if (firstNumber != false) {
-                    arrayMain = Array.from(operate(secondNumber, "minus").toString());
-                // If firstNumber IS empty, send number and sign. Don't update array.
-                } else if (firstNumber == false) {
-                    operate(secondNumber, "minus");
-                }
-
-                // To ensure screen is cleared when next numbers are entered.
-                clearScreen = true;
-
-                break;
+            
                 
             case button.textContent == "=":
                 
-                if (!(firstNumber != false)) {
-                    break;
-                }
-                // Was this button pressed already? If yes, repeat operation.
-                if (pressHistory[0] == pressHistory[1]) {
-                    
-                    arrayMain = Array.from(operate(0, "repeatEq").toString());
-                    //console.log(operate(0, "repeatEq"));
-                    //arrayMain = Array.from(operate(0, "repeatEq").toString());
+                // No pending sign
+                if (!pendingSign) {
                     break;
                 }
 
-                // Convert arrayMain/ display to number.
-                secondNumber = parseFloat(arrayMain.join(""));
-
-                // Send sign and number in arrayMain to operate.
                 
-                    arrayMain = Array.from(operate(secondNumber, "equals").toString());
-                
+                // Equals double press.
+                if (pressHistory[1] == "=") {
+                    console.log("double equals");
+                    console.log(firstNumber, memSecondNum, pendingSign);
+                    result = operate(firstNumber, memSecondNum, pendingSign);
+                    firstNumber = result;
+                    console.log(result);
+                // Equals single press.
+                } else {
+                    console.log("equals")
+                    result = operate(firstNumber, secondNumber, pendingSign);
+                    memSecondNum = secondNumber;
+                    console.log("memSecondNum:", memSecondNum);
+                    firstNumber = result;
+                    secondNumber = "";
+                    console.log(result);
+                }
 
                 break;
         }
-        updateDisplay(arrayMain);
+        //updateDisplay(arrayMain);
     })
 });
 
-function equals(firstNumber, secondNumber, pendingSign) {
+function operate(firstNumber, secondNumber, pendingSign) {
     switch (true) {
-        case pendingSign == "plus":
-            return firstNumber + secondNumber;
-        case pendingSign == "minus":
-            return firstNumber - secondNumber;
-        case pendingSign == "multiply":
-            return firstNumber * secondNumber;
-        case pendingSign == "divide":
-            return firstNumber / secondNumber;            
+        case pendingSign == "Plus":
+            return parseFloat(firstNumber) + parseFloat(secondNumber);
+        case pendingSign == "Minus":
+            return parseFloat(firstNumber) - parseFloat(secondNumber);
+        case pendingSign == "Multiply":
+            return parseFloat(firstNumber) * parseFloat(secondNumber);
+        case pendingSign == "Divide":
+            return parseFloat(firstNumber) / parseFloat(secondNumber);            
     }
 }
-
