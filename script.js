@@ -12,6 +12,13 @@ var result;
 var memSecondNum = "";
 
 function updateDisplay(displayValue) {
+    // while (displayValue.substring(0,1) == "0") {
+    //     displayValue = displayValue.substring(1);
+    //     console.log(displayValue);
+    // }
+    // if (displayValue.length == 1 && displayValue == "") {
+    //     displayValue = "0";
+    // }
     displayMain.textContent = displayValue;
 }
 
@@ -64,11 +71,34 @@ buttons.forEach(function (button) {
                 break;
 
             case button.textContent == "Del":
-                console.log("Delete");
-                arrayMain.pop();
-                if (arrayMain.length == 0) {
-                    arrayMain = [0];
+                if (firstNumIsCurrent) {
+                    if (firstNumber.length > 1) {
+                        firstNumber = firstNumber.substring(0, firstNumber.length - 1);
+                        updateDisplay(firstNumber);
+                    } else if (firstNumber.length == 1) {
+                        updateDisplay("0");
+                        firstNumber = "";
+                        pressHistory = [];
+                    }
+                } else {
+                    // After equals button pressed.. firstNumber is being edited.
+                    if (secondNumber.length > 1) {
+                        console.log("a")
+                        secondNumber = secondNumber.substring(0, secondNumber.length - 1);
+                        updateDisplay(secondNumber);
+                    } else if (secondNumber.length == 1) {
+                        console.log("b")
+                        updateDisplay("0");
+                        secondNumber = "";
+                    } 
+                    // else {
+                    //     console.log("c")
+                    //     firstNumber = firstNumber.substring(0, firstNumber.length - 1);
+                    //     updateDisplay(firstNumber);
+                    // }
                 }
+                console.log("First:", firstNumber);
+                console.log("Second:", secondNumber);
                 break;
 
             case button.attributes["data-but"].value == "Plus":
@@ -104,12 +134,24 @@ buttons.forEach(function (button) {
                     break;
                 }
 
+                // Last press was a sign
+                if (pressHistory[1] == "+") {
+                    console.log(pressHistory[1]);
+                    pressHistory.shift();
+                    console.log("Not allowed")
+                    break;
+                }
+
                 // No pending sign
                 if (!pendingSign) {
                     break;
                 }
 
-                
+                // SecondNumber is blank
+                if (secondNumber == "") {
+                    secondNumber == memSecondNum;
+                    // break;
+                }
 
                 
                 // Equals double press.
@@ -124,9 +166,10 @@ buttons.forEach(function (button) {
                     console.log("equals")
                     result = operate(firstNumber, secondNumber, pendingSign);
                     memSecondNum = secondNumber;
-                    firstNumber = result;
+                    firstNumber = result.toString();
                     secondNumber = "";
-                    console.log(result);
+                    firstNumIsCurrent = true;
+                    console.log(result.toString());
                 }
 
                 break;
