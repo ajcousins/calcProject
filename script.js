@@ -11,8 +11,8 @@ var firstNumIsCurrent = true;
 var result;
 var memSecondNum = "";
 
-function updateDisplay(arrayA) {
-    displayMain.textContent = arrayA.join("");
+function updateDisplay(displayValue) {
+    displayMain.textContent = displayValue;
 }
 
 // Handles inputs
@@ -30,8 +30,10 @@ buttons.forEach(function (button) {
                 // If firstNumber is current, add numbers to firstNumber
                 if (firstNumIsCurrent) {
                     firstNumber += button.textContent;
+                    updateDisplay(firstNumber)
                 } else {
                     secondNumber += button.textContent;
+                    updateDisplay(secondNumber)
                 }
                 console.log("First:", firstNumber);
                 console.log("Second:", secondNumber);
@@ -52,6 +54,7 @@ buttons.forEach(function (button) {
         
             case button.textContent == "C":
                 console.log("Clear");
+                updateDisplay("0");
                 pressHistory = [];
                 firstNumber = "";
                 secondNumber = "";
@@ -93,26 +96,34 @@ buttons.forEach(function (button) {
             
                 
             case button.textContent == "=":
-                
+            
+                // Equals is first button
+                if (pressHistory.length == 1) {
+                    pressHistory = [];
+                    console.log("here");
+                    break;
+                }
+
                 // No pending sign
                 if (!pendingSign) {
                     break;
                 }
 
                 
+
+                
                 // Equals double press.
                 if (pressHistory[1] == "=") {
                     console.log("double equals");
-                    console.log(firstNumber, memSecondNum, pendingSign);
                     result = operate(firstNumber, memSecondNum, pendingSign);
                     firstNumber = result;
                     console.log(result);
+
                 // Equals single press.
                 } else {
                     console.log("equals")
                     result = operate(firstNumber, secondNumber, pendingSign);
                     memSecondNum = secondNumber;
-                    console.log("memSecondNum:", memSecondNum);
                     firstNumber = result;
                     secondNumber = "";
                     console.log(result);
@@ -125,14 +136,21 @@ buttons.forEach(function (button) {
 });
 
 function operate(firstNumber, secondNumber, pendingSign) {
+    var result;
     switch (true) {
         case pendingSign == "Plus":
-            return parseFloat(firstNumber) + parseFloat(secondNumber);
+            result = parseFloat(firstNumber) + parseFloat(secondNumber)
+            break;
         case pendingSign == "Minus":
-            return parseFloat(firstNumber) - parseFloat(secondNumber);
+            result = parseFloat(firstNumber) - parseFloat(secondNumber);
+            break;
         case pendingSign == "Multiply":
-            return parseFloat(firstNumber) * parseFloat(secondNumber);
+            result = parseFloat(firstNumber) * parseFloat(secondNumber);
+            break;
         case pendingSign == "Divide":
-            return parseFloat(firstNumber) / parseFloat(secondNumber);            
+            result = parseFloat(firstNumber) / parseFloat(secondNumber);  
+            break;
     }
+    updateDisplay(result);
+    return result;
 }
