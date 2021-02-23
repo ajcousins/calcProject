@@ -24,35 +24,24 @@ function updateDisplay(displayValue) {
         displayString = displayValue.toString();
     }
     
-    //let displayString = Number.parseFloat(displayValue).toPrecision(13);
-    
     if (displayString.includes(".")) {
         isDecimal = true;
     }
 
+    // Error messages.
     if (displayString == "NaN") {
         displayString = "Nope";
         error = true;
-    
-    }
-
-    else if (displayString == "Infinity") {
+    } else if (displayString == "Infinity") {
         displayString = "Computer says no";
         displayMain.style.fontSize="35px";
         displayMain.style.marginTop="17px";
         error = true;
         
-    }
-
-    
-
-    else if (displayString.length > characterLimit) {
+    } else if (displayString.length > characterLimit) {
         displayString = "Too long..."
         error = true;
-    
     }
-
-
 
     displayMain.textContent = displayString;
 }
@@ -68,39 +57,32 @@ buttons.forEach(function (button) {
             displayMain.style.marginTop=null;
         }
 
-        // Record last thing that was pressed. Can be used for upper display.
+        // Record last thing that was pressed.
         if (button.textContent != "C") {
             pressHistory.unshift(button.textContent);
         }
         
         check1:
         switch (true) {
-
             // Numbers
             case !(isNaN(button.textContent)):
-                
-
                 if (firstNumIsCurrent) {
                     if (firstNumber.length < characterLimit) {
                         firstNumber += button.textContent;
                         updateDisplay(firstNumber);
                     }
-                    
                 } else if (secondNumber.length < characterLimit) {
                     secondNumber += button.textContent;
                     updateDisplay(secondNumber)
                 }
-
-                console.log("First:", firstNumber);
-                console.log("Second:", secondNumber);
-                
                 break;
-        
+
             case button.textContent == ".":
                 if (displayMain.textContent.length > 12) {
                     break;
                 }
-                // Needs to check if decimal is present in display to work.
+
+                // Prevents more than one decimal.
                 if(isDecimal) {
                     break;
                 }
@@ -109,7 +91,6 @@ buttons.forEach(function (button) {
                     if (firstNumber == "") {
                         firstNumber += "0";
                     }
-
                     firstNumber += ".";
                     updateDisplay(firstNumber)
                 } else {
@@ -119,12 +100,7 @@ buttons.forEach(function (button) {
                     secondNumber += ".";
                     updateDisplay(secondNumber)
                 }
-
-                console.log("First:", firstNumber);
-                console.log("Second:", secondNumber);
-
                 break;
-        
         
             case button.textContent == "C":
                 clearEverything();
@@ -174,18 +150,15 @@ buttons.forEach(function (button) {
                 isDecimal = false;
                 break;
 
-            
-                
             case button.textContent == "=":
             
-                // Equals is first button
+                // Equals is first button to be pressed.
                 if (pressHistory.length == 1) {
                     pressHistory = [];
                     break;
                 }
 
-                // Last press was a sign
-                console.log(pressHistory[1]);
+                // Last press was a sign.
                 switch (true) {
                     case pressHistory[1] == "+":
                     case pressHistory[1] == "-":
@@ -193,13 +166,10 @@ buttons.forEach(function (button) {
                     case pressHistory[1] == "÷":
                         pressHistory.shift();
                         break check1;
-                        
                 }
                 
-
                 // No pending sign
                 if (!pendingSign) {
-                    
                     break;
                 }
 
@@ -207,10 +177,8 @@ buttons.forEach(function (button) {
                 if (secondNumber == "") {
                     console.log("here");
                     secondNumber == memSecondNum;
-                    // break;
                 }
 
-                
                 // Equals double press.
                 if (pressHistory[1] == "=") {
                     result = operate(firstNumber, memSecondNum, pendingSign);
@@ -224,15 +192,7 @@ buttons.forEach(function (button) {
                     secondNumber = "";
                     firstNumIsCurrent = true;
                 }
-                
-                break;
-
-            case true:
-                console.log("First:", firstNumber);
-                console.log("Second:", secondNumber);
-
         }
-        
     })
 });
 
