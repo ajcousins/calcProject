@@ -37,10 +37,11 @@ h4 {
 }
 
 .displayMain {
-    font-family: 'Big Shoulders Stencil Text', sans-serif;
-    margin: 14px 12px;
-    
+    font-family: 'Share Tech Mono', monospace;
+    margin: 16px 12px;
+    letter-spacing: -3px;
     font-size: 40px;
+    font-weight: 400;
     position: relative;
     bottom: 3px;
     color:#383838;

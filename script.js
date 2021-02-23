@@ -12,7 +12,7 @@ var error = false;
 var result;
 var memSecondNum = "";
 
-var characterLimit = 13;
+var characterLimit = 11;
 
 function updateDisplay(displayValue) {
 
@@ -20,7 +20,7 @@ function updateDisplay(displayValue) {
     if (pressHistory[0] == "." && displayValue % 1 == 0) {
         displayString = displayValue.toString()
     } else {
-        displayValue = Math.round(displayValue * 10000000000) / 10000000000;
+        displayValue = Math.round(displayValue * 100000000) / 100000000;
         displayString = displayValue.toString();
     }
     
@@ -34,14 +34,34 @@ function updateDisplay(displayValue) {
         error = true;
     } else if (displayString == "Infinity") {
         displayString = "Computer says no";
-        displayMain.style.fontSize="35px";
-        displayMain.style.marginTop="17px";
+        displayMain.style.fontSize="28px";
+        displayMain.style.marginTop="24px";
         error = true;
         
     } else if (displayString.length > characterLimit) {
         displayString = "Too long..."
+        displayMain.style.fontSize="28px";
+        displayMain.style.marginTop="24px";
         error = true;
     }
+
+        // How many zeros are there before numbers and a decimal point?
+        console.log(pressHistory);
+        var zeroCount = 0;
+        for (var i = 0; i < pressHistory.length; i++) {
+            if (pressHistory[0] == "0") {
+                //console.log("a")
+                if (pressHistory[i] == "0") {
+                    zeroCount++
+                } else if (pressHistory[i] == ".") {
+                    break;
+                }
+            }
+            if (zeroCount > 0) {
+                console.log("zeroCount", zeroCount)
+            }
+        }
+
 
     displayMain.textContent = displayString;
 }
