@@ -16,13 +16,15 @@ function updateDisplay(displayValue) {
 
     var displayString;
 
-    // If decimal was last pressed.. and there isn't already a decimal present..
-    if (pressHistory[0] == "." && displayValue % 1 == 0) {
-        displayString = displayValue.toString()
-    } else {
-        displayValue = Math.round(displayValue * 100) / 100;
-        displayString = displayValue.toString();
-    }
+    displayString = displayValue.toString()
+
+    // // If decimal was last pressed.. and there isn't already a decimal present..
+    // if (pressHistory[0] == "." && displayValue % 1 == 0) {
+    //     displayString = displayValue.toString()
+    // } else {
+    //     displayValue = Math.round(displayValue * 100) / 100;
+    //     displayString = displayValue.toString();
+    // }
 
     
     //let displayString = Number.parseFloat(displayValue).toPrecision(13);
