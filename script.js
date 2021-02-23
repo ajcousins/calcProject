@@ -132,7 +132,6 @@ buttons.forEach(function (button) {
             case button.attributes["data-but"].value == "Minus":
             case button.attributes["data-but"].value == "Multiply":
             case button.attributes["data-but"].value == "Divide":
-                console.log("operator");
                 var operator = button.attributes["data-but"].value;
                 // If button is the first to be pressed, make first number "0".
                 if (pressHistory.length == 1) {
@@ -175,7 +174,6 @@ buttons.forEach(function (button) {
 
                 // SecondNumber is blank
                 if (secondNumber == "") {
-                    console.log("here");
                     secondNumber == memSecondNum;
                 }
 
